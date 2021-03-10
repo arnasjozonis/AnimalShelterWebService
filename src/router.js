@@ -6,8 +6,7 @@ const router = Router()
 
 // /api/shelter
 /**
- * This function comment is parsed by doctrine
- * @route GET /api
+ * @route GET /api/shelet
  * @group foo - Operations about user
  * @param {string} email.query.required - username or email - eg: user@domain
  * @param {string} password.query.required - user's password.
