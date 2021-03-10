@@ -39,7 +39,11 @@ export default {
   },
   updateOne: async (req, res) => {
     try {
-      const result = await crud.updateAnimal(req.body)
+      const result = await crud.updateAnimal({
+        ...req.body,
+        shelterID: req.params?.id,
+        id: req.params?.animalId
+      })
       if (result) {
         res.status(200).end()
       } else {
@@ -52,8 +56,11 @@ export default {
   deleteOne: async (req, res) => {
     try {
       const result = await crud.deleteAnimal(req.params?.animalId)
-      console.log(result)
-      return res.status(200).end('Deleted')
+      if (result.changes > 0) {
+        return res.status(200).end('Deleted')
+      } else {
+        return res.status(400).end()
+      }
     } catch (e) {
       res.status(500).end(e?.toString())
     }

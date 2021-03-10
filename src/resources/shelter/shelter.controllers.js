@@ -33,13 +33,13 @@ export default {
       res.status(500).end(e?.toString())
     }
   },
-  updateOne: async (req, res, next) => {
+  updateOne: async (req, res) => {
     try {
       const result = await crud.updateShelter({
         ...req.body,
         id: req.params?.id
       })
-      if (result) {
+      if (result.changes > 0) {
         res.status(200).end()
       } else {
         res.status(400).end('Bad request')
