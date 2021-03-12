@@ -6,11 +6,14 @@ const router = Router()
 
 // /api/shelter
 /**
- * @route GET /api/shelet
- * @group foo - Operations about user
- * @param {string} email.query.required - username or email - eg: user@domain
- * @param {string} password.query.required - user's password.
- * @returns {object} 200 - An array of user info
+ * @route GET /shelter
+ * @group Animal shelter resource
+ * @returns {Array<Shelter.model>} 200 - An array shelters
+ * @returns {Error}  default - Unexpected error
+ * 
+ * @route POST /shelter
+ * @param {Shelter.model} Shelter.body 
+ * @returns {Shelter.model} 200 - Newly created shelter data
  * @returns {Error}  default - Unexpected error
  */
 router
