@@ -12,6 +12,7 @@ const router = Router()
  * @returns {Error}  default - Unexpected error
  * 
  * @route POST /shelter
+ * @group Animal shelter resource
  * @param {Shelter.model} Shelter.body 
  * @returns {Shelter.model} 200 - Newly created shelter data
  * @returns {Error}  default - Unexpected error
