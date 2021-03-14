@@ -14,7 +14,7 @@ let options = {
       title: 'Swagger',
       version: '1.0.0'
     },
-    host: 'localhost:5000',
+    host: 'localhost:3000',
     basePath: '/api',
     produces: ['application/json', 'application/xml'],
     schemes: ['http', 'https'],
@@ -28,7 +28,7 @@ const port = process.env.PORT || 3000
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
-app.use('/api/shelter', router)
+app.use('/api/shelters', router)
 
 export const start = async () => {
   try {

@@ -52,7 +52,7 @@ export default {
     try {
       const result = await crud.deleteShelter(req.params?.id)
       if (result?.changes > 0) {
-        res.status(200).end('deleted')
+        res.status(206).end('Deleted')
       } else {
         res.status(400).end('bad request')
       }

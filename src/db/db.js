@@ -171,19 +171,17 @@ const updateShelter = async ({ id, location, description, name }) => {
       name,
       id
     )
-    console.log(result)
-    if (result.changes > 0) {
-      return true
-    }
+    return result
   }
 }
 
-const deleteAnimal = async animalId =>
+const deleteAnimal = async (shelterId, animalId) =>
   SQL.run(
     `
-    DELETE FROM Animal WHERE id = ?
+    DELETE FROM Animal WHERE id = ? AND shelterID = ?
   `,
-    animalId
+    animalId,
+    shelterId
   )
 
 const deleteShelter = async id =>

@@ -55,9 +55,10 @@ export default {
   },
   deleteOne: async (req, res) => {
     try {
-      const result = await crud.deleteAnimal(req.params?.animalId)
+      console.log(req.params);
+      const result = await crud.deleteAnimal(req.params?.id, req.params?.animalId)
       if (result.changes > 0) {
-        return res.status(200).end('Deleted')
+        return res.status(206).end('Deleted')
       } else {
         return res.status(400).end()
       }
