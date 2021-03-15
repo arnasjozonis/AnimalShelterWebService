@@ -1,25 +1,28 @@
 import { crud } from '../../db/db'
 
 export default {
-  getOne: async (req, res, next) => {
+  getOne: async (req, res) => {
     try {
       const result = await crud.getAnimal(req.params?.animalId)
       if (!result) {
         res.status(404).end('Not found')
       } else {
-        res.status(200).json({ data: result })
+        res.status(200).json(result)
       }
     } catch (e) {
       res.status(500).end(e?.toString())
     }
   },
-  addOne: async (req, res, next) => {
+  addOne: async (req, res) => {
     try {
-      const result = await crud.addAnimal(req.body)
-      if (!result) {
-        return res.status(400).end()
+      const result = await crud.addAnimal({
+        ...req.body,
+        shelterID: req.params?.id
+      })
+      if (result.code) {
+        return res.status(result.code).end()
       } else {
-        res.status(200).json({ data: result })
+        res.status(200).json(result)
       }
     } catch (e) {
       res.status(500).end(e?.toString())
@@ -31,7 +34,7 @@ export default {
       if (!result) {
         res.status(404).end('Not found')
       } else {
-        res.status(200).json({ data: result })
+        res.status(200).json(result)
       }
     } catch (e) {
       res.status(500).end(e?.toString())
@@ -45,7 +48,7 @@ export default {
         id: req.params?.animalId
       })
       if (result) {
-        res.status(200).end()
+        res.status(200).json(result)
       } else {
         res.status(400).end('Bad request')
       }

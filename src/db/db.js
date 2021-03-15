@@ -42,21 +42,37 @@ export async function connect(withSeed = true) {
   }
 }
 
-const addShelter = async ({ name, location, description }) => {
-  console.log('start')
-  const result = await SQL.run(
-    `
-      INSERT INTO Shelter (name, location, description) VALUES (?, ?, ?)
-    `,
-    name,
-    location,
-    description
-  )
-  if (result && result.lastID) {
-    return { id: result.lastID, name, location, description }
+const addShelter = async ({ name, location, description, animals }) => {
+  try {
+    const result = await SQL.run(
+      `
+        INSERT INTO Shelter (name, location, description) VALUES (?, ?, ?)
+      `,
+      name,
+      location,
+      description
+    )
+    if (result && result.lastID) {
+      const shelterID = result.lastID
+      if (animals?.length) {
+        try {
+          const addedAnimals = await Promise.all(
+            animals.map(async animal => addAnimal({ ...animal, shelterID }))
+          )
+          if (addedAnimals?.find(({ code }) => code)) {
+            return { code: 206, shelterID }
+          }
+          return getShelter(shelterID)
+        } catch (e) {
+          return { code: 206, shelterID }
+        }
+      }
+    }
+  } catch (e) {
+    if (e.code === 'SQLITE_CONSTRAINT') {
+      return { message: 'Bad request' }
+    }
   }
-  console.log('fail')
-  return false
 }
 
 const getShelter = async id => {
@@ -81,21 +97,25 @@ const addAnimal = async ({ type, age, name, description, shelterID }) => {
     shelterID
   )
   if (result && result.id) {
-    result = await SQL.run(
-      `
-        INSERT INTO Animal (type,age,name,description,shelterID) VALUES (?,?,?,?,?)
-      `,
-      type,
-      age,
-      name,
-      description,
-      shelterID
-    )
-    if (result != null && result.changes > 0 && result.lastID) {
-      return { id: result.lastID }
+    try {
+      result = await SQL.run(
+        `
+          INSERT INTO Animal (type,age,name,description,shelterID) VALUES (?,?,?,?,?)
+        `,
+        type,
+        age,
+        name,
+        description,
+        shelterID
+      )
+      if (result != null && result.changes > 0 && result.lastID) {
+        return await getAnimal(result.lastID)
+      }
+    } catch (e) {
+      return { code: 400 }
     }
   }
-  return null
+  return { code: 404 }
 }
 
 const getShelters = async () => {
@@ -133,9 +153,7 @@ const getAnimal = async animalID =>
 
 const updateAnimal = async ({ id, type, description, age, name }) => {
   const existing = await getAnimal(id)
-  const old = { type, description, age, name }
   if (existing != null) {
-    const { type, description, age, name } = merge(existing, old)
     const result = await SQL.run(
       `
         UPDATE Animal
@@ -148,9 +166,8 @@ const updateAnimal = async ({ id, type, description, age, name }) => {
       name,
       id
     )
-    console.log(result)
     if (result.changes > 0) {
-      return true
+      return getAnimal(id)
     }
   }
 }

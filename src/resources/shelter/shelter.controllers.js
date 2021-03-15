@@ -1,34 +1,41 @@
 import { crud } from '../../db/db'
 
 export default {
-  getOne: async (req, res, next) => {
+  getOne: async (req, res) => {
     try {
       const result = await crud.getShelter(req.params?.id)
       if (!result) {
         res.status(404).end('Not found')
       } else {
-        res.status(200).json({ data: result })
+        res.status(200).json({ result })
       }
     } catch (e) {
       res.status(500).end(e?.toString())
     }
   },
-  addOne: async (req, res, next) => {
+  addOne: async (req, res) => {
     try {
       const result = await crud.addShelter(req.body)
-      if (!result) {
-        res.status(400).end()
+      if (result.code) {
+        if (result.code === 206) {
+          const partial = await crud.getShelter(result?.shelterID)
+          return res.status(206).json(partial)
+        } else {
+          return res.status(400).end()
+        }
+      } else if (result) {
+        return res.status(200).json(result)
       } else {
-        res.status(200).json({ data: result })
+        return res.status(400).end()
       }
     } catch (e) {
       res.status(500).end(e?.toString())
     }
   },
-  getAll: async (req, res, next) => {
+  getAll: async (_, res) => {
     try {
       const result = await crud.getShelters()
-      res.status(200).json({ data: result })
+      res.status(200).json(result)
     } catch (e) {
       res.status(500).end(e?.toString())
     }

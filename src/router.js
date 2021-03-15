@@ -67,6 +67,7 @@ router
   /**
    * @group Shelter animals
    * @route POST /shelters/{id}/animals
+   * @param {integer} id.path.required Shelter id
    * @param {Animal.model} Animal.body
    * @returns {Animal.model} 200 - Newly added animal
    * @returns {Error}  default - Unexpected error
