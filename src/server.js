@@ -17,7 +17,7 @@ let options = {
     host: 'localhost:3000',
     basePath: '/api',
     produces: ['application/json', 'application/xml'],
-    schemes: ['http', 'https'],
+    schemes: ['http', 'https']
   },
   basedir: __dirname,
   files: ['./router.js', './models/**.js']

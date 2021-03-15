@@ -1,4 +1,3 @@
-
 /**
  * @typedef Animal
  * @property {integer} id
@@ -7,6 +6,12 @@
  * @property {string} type.required
  * @property {string} description
  */
-export function Shelterl({id, name, description, type, shelterID}) {
-    return {id,shelterID,  name, description: description || "No description", type}
+export function Shelterl({ id, name, description, type, shelterID }) {
+  return {
+    id,
+    shelterID,
+    name,
+    description: description || 'No description',
+    type
+  }
 }
