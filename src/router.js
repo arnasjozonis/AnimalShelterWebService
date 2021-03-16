@@ -41,15 +41,13 @@ router
    * @param {integer} id.path.required
    * @param {Shelter.model} Shelter.body
    * @returns {Shelter.model} 200 - Updated shelter model
-   * @returns {Error}  default - Unexpected error
    */
   .put(shelterController.updateOne)
   /**
    * @group Shelter
    * @route delete /shelters/{id}
    * @param {integer} id.path.required
-   * @returns {Text} 206 - Delete confirmation
-   * @returns {Error}  default - Unexpected error
+   * @returns {Text} 204 - Delete confirmation
    */
   .delete(shelterController.deleteOne)
 
@@ -61,7 +59,6 @@ router
    * @route get /shelters/{id}/animals
    * @param {integer} id.path.required Shelter id
    * @returns {Array.<Animal>} 202 - List of all animals in shelter
-   * @returns {Error}  default - Unexpected error
    */
   .get(animalController.getAll)
   /**
@@ -70,7 +67,6 @@ router
    * @param {integer} id.path.required Shelter id
    * @param {Animal.model} Animal.body
    * @returns {Animal.model} 200 - Newly added animal
-   * @returns {Error}  default - Unexpected error
    */
   .post(animalController.addOne)
 
@@ -83,7 +79,6 @@ router
    * @param {integer} id.path.required Shelter id
    * @param {integer} animalId.path.required Animal id
    * @returns {Animal.model} 200 - Animal data
-   * @returns {Error}  default - Unexpected error
    */
   .get(animalController.getOne)
   /**
@@ -93,7 +88,6 @@ router
    * @param {integer} animalId.path.required Animal id
    * @param {Animal.model} Animal.body
    * @returns {Animal.model} 200 - Updated animal data
-   * @returns {Error}  default - Unexpected error
    */
   .put(animalController.updateOne)
   /**
@@ -101,8 +95,7 @@ router
    * @route delete /shelters/{id}/animals/{animalId}
    * @param {integer} id.path.required Shelter id
    * @param {integer} animalId.path.required Animal id
-   * @returns {Text} 206 - Delete confirmation
-   * @returns {Error}  default - Unexpected error
+   * @returns {Text} 204 - Delete confirmation
    */
   .delete(animalController.deleteOne)
 

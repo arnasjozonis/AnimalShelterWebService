@@ -7,7 +7,7 @@ export default {
       if (!result) {
         res.status(404).end('Not found')
       } else {
-        res.status(200).json({ result })
+        res.status(200).json(result)
       }
     } catch (e) {
       res.status(500).end(e?.toString())
@@ -19,11 +19,13 @@ export default {
       if (result.code) {
         if (result.code === 206) {
           const partial = await crud.getShelter(result?.shelterID)
+          res.set('x-location', `/shelters/${result.id}`)
           return res.status(206).json(partial)
         } else {
-          return res.status(400).end()
+          return res.status(result.code).end()
         }
       } else if (result) {
+        res.set('x-location', `/shelters/${result.id}`)
         return res.status(200).json(result)
       } else {
         return res.status(400).end()
@@ -46,10 +48,10 @@ export default {
         ...req.body,
         id: req.params?.id
       })
-      if (result.changes > 0) {
-        res.status(200).end()
+      if (result && !result.code) {
+        res.status(200).json(result)
       } else {
-        res.status(400).end('Bad request')
+        res.status(result.code).end()
       }
     } catch (e) {
       res.status(500).end(e?.toString())
@@ -59,9 +61,9 @@ export default {
     try {
       const result = await crud.deleteShelter(req.params?.id)
       if (result?.changes > 0) {
-        res.status(206).end('Deleted')
+        res.status(204).end('Deleted')
       } else {
-        res.status(400).end('bad request')
+        res.status(400).end()
       }
     } catch (e) {
       res.status(500).end(e?.toString())

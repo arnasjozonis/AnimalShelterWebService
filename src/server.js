@@ -6,6 +6,7 @@ import expressSwagger from 'express-swagger-generator'
 
 const app = express()
 const swagger = expressSwagger(app)
+const port = process.env.PORT || 3000
 
 let options = {
   swaggerDefinition: {
@@ -14,7 +15,7 @@ let options = {
       title: 'Swagger',
       version: '1.0.0'
     },
-    host: 'localhost:3000',
+    host: `localhost:${port}`,
     basePath: '/api',
     produces: ['application/json', 'application/xml'],
     schemes: ['http', 'https']
@@ -24,7 +25,6 @@ let options = {
 }
 swagger(options)
 
-const port = process.env.PORT || 3000
 app.use(json())
 app.use(urlencoded({ extended: true }))
 

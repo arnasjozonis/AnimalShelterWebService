@@ -22,6 +22,10 @@ export default {
       if (result.code) {
         return res.status(result.code).end()
       } else {
+        res.set(
+          'x-location',
+          `/shelters/${result.shelterID}/animals/${result.id}`
+        )
         res.status(200).json(result)
       }
     } catch (e) {
@@ -47,7 +51,7 @@ export default {
         shelterID: req.params?.id,
         id: req.params?.animalId
       })
-      if (result) {
+      if (result && !result.code) {
         res.status(200).json(result)
       } else {
         res.status(400).end('Bad request')
@@ -64,7 +68,7 @@ export default {
         req.params?.animalId
       )
       if (result.changes > 0) {
-        return res.status(206).end('Deleted')
+        return res.status(204).end('Deleted')
       } else {
         return res.status(400).end()
       }

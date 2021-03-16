@@ -3,7 +3,6 @@ import path from 'path'
 import fs from 'fs'
 import util from 'util'
 import { initDb } from './seed'
-import { merge } from 'lodash'
 
 var SQL
 
@@ -70,7 +69,9 @@ const addShelter = async ({ name, location, description, animals }) => {
     }
   } catch (e) {
     if (e.code === 'SQLITE_CONSTRAINT') {
-      return { message: 'Bad request' }
+      return { code: 400 }
+    } else {
+      return { code: 500 }
     }
   }
 }
@@ -154,41 +155,53 @@ const getAnimal = async animalID =>
 const updateAnimal = async ({ id, type, description, age, name }) => {
   const existing = await getAnimal(id)
   if (existing != null) {
-    const result = await SQL.run(
-      `
-        UPDATE Animal
-        SET type = ?, description = ?, age = ?, name = ?
-        WHERE id = ?
-      `,
-      type,
-      description,
-      age,
-      name,
-      id
-    )
-    if (result.changes > 0) {
-      return getAnimal(id)
+    try {
+      const result = await SQL.run(
+        `
+          UPDATE Animal
+          SET type = ?, description = ?, age = ?, name = ?
+          WHERE id = ?
+        `,
+        type,
+        description,
+        age,
+        name,
+        id
+      )
+      if (result.changes > 0) {
+        return getAnimal(id)
+      }
+    } catch (e) {
+      return { code: 400 }
     }
   }
 }
 
 const updateShelter = async ({ id, location, description, name }) => {
   const existing = await getShelter(id)
-  const old = { description, location, name }
   if (existing != null) {
-    const { description, location, name } = merge(existing, old)
-    const result = await SQL.run(
-      `
-        UPDATE Shelter
-        SET location = ?, description = ?, name = ?
-        WHERE id = ?
-      `,
-      location,
-      description,
-      name,
-      id
-    )
-    return result
+    try {
+      const result = await SQL.run(
+        `
+          UPDATE Shelter
+          SET location = ?, description = ?, name = ?
+          WHERE id = ?
+        `,
+        location,
+        description,
+        name,
+        id
+      )
+      if (result.changes > 0) {
+        return await getShelter(id)
+      } else {
+        return { code: 400 }
+      }
+    } catch (e) {
+      return { code: 400 }
+    }
+  } else {
+    return { code: 404 }
   }
 }
 
