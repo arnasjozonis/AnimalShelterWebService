@@ -1,8 +1,44 @@
 version: '3.9'
 services:
-  web:
+  shelters:
     build: .
     ports:
-      - '5000:5000'
-    environment:
-      PORT: 5000
+      - "3000:3000"
+    networks:
+      - local
+    container_name: shelters
+    depends_on:
+      - events
+  
+  events:
+    build: .
+    ports:
+      - "5000:5000"
+    networks:
+      - local
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - local
+    volumes:
+      - mongo-data:/data/db
+  
+  mongo-express:
+    image: mongo-express
+    networks:
+      - local
+    restart: always
+    ports:
+      - "8081:8081"
+
+volumes:
+  mongo-data:
+
+networks:
+  local:

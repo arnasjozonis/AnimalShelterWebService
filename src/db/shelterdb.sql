@@ -19,3 +19,12 @@ CREATE TABLE IF NOT EXISTS Animal (
 
 	FOREIGN KEY (shelterID) REFERENCES Shelter(id)
 );
+
+CREATE TABLE IF NOT EXISTS Events (
+	id INTEGER PRIMARY KEY,
+	remoteID VARCHAR(32),
+	shelterID INTEGER NOT NULL,
+
+	FOREIGN KEY (shelterID) REFERENCES Shelter(id),
+	UNIQUE(remoteID, shelterID)
+);

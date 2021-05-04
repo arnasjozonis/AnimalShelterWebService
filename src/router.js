@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import shelterController from './resources/shelter/shelter.controllers'
 import animalController from './resources/animal/animal.controllers'
+import eventsController from './resources/events/events.controllers'
 
 const router = Router()
 
@@ -98,5 +99,36 @@ router
    * @returns {Text} 204 - Delete confirmation
    */
   .delete(animalController.deleteOne)
+
+// /api/shelters/:id/events
+router
+  .route('/:id/events')
+  /**
+   * @group Shelter events
+   * @route get /shelters/{id}/events
+   * @param {integer} id.path.required Shelter id
+   * @returns {Array.<Event>} 202 - List of all events planned for shelter
+   */
+  .get(eventsController.getAll)
+  /**
+   * @group Shelter events
+   * @route POST /shelters/{id}/events
+   * @param {integer} id.path.required Shelter id
+   * @param {Event.model} Event.body
+   * @returns {Event.model} 200 - Created event
+   */
+  .post(eventsController.addOne)
+
+// /api/shelters/:id/events/:eventId
+router
+  .route('/:id/events/:eventId')
+  /**
+   * @group Shelter events
+   * @route get /shelters/{id}/events/{eventId}
+   * @param {integer} id.path.required Shelter id
+   * * @param {integer} eventId.path.required Event id
+   * @returns {Event.model} 200 - Event info
+   */
+  .get(eventsController.getOne)
 
 export default router

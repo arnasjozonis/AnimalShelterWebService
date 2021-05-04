@@ -6,7 +6,7 @@
  * @property {string} type.required
  * @property {string} description
  */
-export function Shelterl({ id, name, description, type, shelterID }) {
+export function Animal({ id, name, description, type, shelterID }) {
   return {
     id,
     shelterID,

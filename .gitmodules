@@ -1,0 +1,3 @@
+[submodule "event-calendar-api"]
+	path = event-calendar-api
+	url = https://github.com/stranger08/event-calendar-api

@@ -85,7 +85,8 @@ const getShelter = async id => {
   )
   if (result != null) {
     const animals = await getShelterAnimals(id)
-    return { ...result, animals }
+    const events = await getShelterEvents(id)
+    return { ...result, animals, events }
   }
   return false
 }
@@ -222,6 +223,42 @@ const deleteShelter = async id =>
     id
   )
 
+const getShelterEvents = async shelterID => {
+  const result = SQL.get(
+    `
+    SELECT * FROM Events WHERE shelterID = ?
+  `,
+    shelterID
+  )
+  return result.length ? result : []
+}
+
+const addShelterEvent = async (shelterId, remoteId) => {
+  let result = await SQL.get(
+    `
+    SELECT id FROM Shelter WHERE id = ?
+  `,
+    shelterId
+  )
+  if (result && result.id) {
+    try {
+      result = await SQL.run(
+        `
+        INSERT INTO Events (remoteID ,shelterID) VALUES (?,?,?,?,?)
+      `,
+        remoteId,
+        shelterId
+      )
+      if (result != null && result.changes > 0 && result.lastID) {
+        return { code: 200 }
+      }
+    } catch (e) {
+      return { code: 400 }
+    }
+  }
+  return { code: 404 }
+}
+
 export const crud = {
   addShelter,
   addAnimal,
@@ -232,5 +269,7 @@ export const crud = {
   updateAnimal,
   updateShelter,
   deleteAnimal,
-  deleteShelter
+  deleteShelter,
+  addShelterEvent,
+  getShelterEvents
 }
