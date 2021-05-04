@@ -4,4 +4,4 @@ Basic REST API for Animal shelters
 
 Run docker compose: `docker-compose up`
 
-API documentation: `localhost:5000/api-docs`
+API documentation: `localhost:3000/api-docs`
